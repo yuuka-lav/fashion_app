@@ -8,7 +8,7 @@ const SignIn = () => {
   const dispatch = useDispatch()
 
   const [email, setEmail] = useState(""),
-      [password, setPassword] = useState("");
+        [password, setPassword] = useState("");
 
   const inputEmail = useCallback((event) => {
     setEmail(event.target.value)
