@@ -84,7 +84,10 @@ const MenuDrawer = (props) => {
         classes={{paper: classes.drawerPaper}}
         ModalProps={{keepMounted: true}}
       >
-      <div>
+      <div 
+        onClose={(event) => props.onClose(event)}
+        onKeyDown={(event) => props.onClose(event)}
+      >
         <div className={classes.searchField}>
           <TextInput 
             fullWidth={ false }

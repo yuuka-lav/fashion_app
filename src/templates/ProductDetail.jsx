@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { db } from '../firebase/index';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
+import { db, FirebaseTimestamp } from '../firebase/index';
+import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import { ImageSwiper, SizeTable } from '../components/Products';
+import { addProductToCart } from '../reducks/users/operations';
 import HTMLReactParser from 'html-react-parser';
-
 
 const useStyle = makeStyles((theme) => ({
   sliderBox: {
@@ -52,6 +52,7 @@ const ProductDetail = () => {
   const id = path.split('/product/')[1]
   // 上の3行で現在のstateからidのみ取り出している
   const [product, setProduct] = useState(null);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     db.collection('products').doc(id).get()
@@ -60,6 +61,20 @@ const ProductDetail = () => {
         setProduct(data)
       })
   },[])
+
+const addProduct = useCallback((selectedSize) => {
+  const timestamp = FirebaseTimestamp.now()
+  dispatch(addProductToCart({
+    added_at: timestamp,
+    description: product.description,
+    gender: product.gender,
+    images: product.images,
+    price: product.price,
+    productId: product.id,
+    quantity: 1,
+    size: selectedSize
+  }))
+},[product])
 
   return(
     <section className="c-section-wrapin">
@@ -72,7 +87,7 @@ const ProductDetail = () => {
             <h2 className="u-text__headline">{product.name}</h2>
             <p className={classes.price}>{product.price.toLocaleString()}</p>
             <div className="module-spacer--small"/>
-            <SizeTable sizes={ product.sizes } />
+            <SizeTable addProduct={ addProduct } sizes={ product.sizes } />
             <div className="module-spacer--small"/>
             <p>{returnCodeToBr(product.description)}</p>
           </div>
