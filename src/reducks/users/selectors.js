@@ -12,6 +12,12 @@ export const getProductsInCart = createSelector(
   state => state.cart
 )
 
+export const getOrdersHistory = createSelector(
+  [usersSelector],
+  state => state.orders
+)
+
+
 export const getUserId = createSelector(
   [usersSelector],
   state => state.uid
