@@ -9,7 +9,7 @@ export const addProductToCart = (addedProduct) => {
     addedProduct['cartId'] = cartRef.id
     await cartRef.set(addedProduct)
 
-    dispatch(push('/'))
+    dispatch(push('/cart'))
   }
 }
 
