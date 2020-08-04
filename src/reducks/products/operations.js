@@ -4,17 +4,21 @@ import { fetchProductsAction, deleteProductsAction } from './actions';
 
 const productsRef = db.collection('products')
 
-export const fetchProducts = () => {
+export const fetchProducts = (gender, category) => {
   return async (dispatch) => {
-    productsRef.orderBy('updated_at', 'desc').get()
-      .then(snapshots => {
-        const productList = []
-        snapshots.forEach(snapshot => {
-          const product = snapshot.data()
-          productList.push(product)
+    let query = productsRef.orderBy('updated_at', 'desc')
+    query = (gender !== "") ? query.where('gender', '==', gender) : query;
+    query = (category !== "") ? query.where('category', '==', category) : query;
+
+      query.get()
+        .then(snapshots => {
+          const productList = []
+          snapshots.forEach(snapshot => {
+            const product = snapshot.data()
+            productList.push(product)
+          })
+          dispatch(fetchProductsAction(productList))
         })
-        dispatch(fetchProductsAction(productList))
-      })
   }
 }
 
