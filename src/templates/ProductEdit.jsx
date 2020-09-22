@@ -27,7 +27,7 @@ const ProductEdit = () => {
   const inputName = useCallback((event) => {
     setName(event.target.value)
   }, [setName])
-  
+
   const inputDescription = useCallback((event) => {
     setDescription(event.target.value)
   }, [setDescription])

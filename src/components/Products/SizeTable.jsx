@@ -7,7 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import {makeStyles} from "@material-ui/styles";
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
   iconCell: {
@@ -20,6 +22,7 @@ const useStyles = makeStyles({
 const SizeTable = (props) => {
   const classes = useStyles();
   const sizes = props.sizes
+
   return(
     <TableContainer>
       <Table>
@@ -43,9 +46,15 @@ const SizeTable = (props) => {
                   )}
                 </TableCell>
                 <TableCell className={classes.iconCell}>
-                  <IconButton onClick={() => props.addFavorite(size.size)}>
-                    <FavoriteBorderIcon />
-                  </IconButton>
+                  { props.isFavorited ? (
+                    <IconButton onClick={() => props.addFavorite(size.size)}>
+                      <FavoriteIcon />
+                    </IconButton>
+                      ) : (
+                    <IconButton onClick={() => props.addFavorite(size.size)}>
+                      <FavoriteBorderIcon />
+                    </IconButton>
+                  )}
                 </TableCell>
               </TableRow>
             ))

@@ -53,6 +53,7 @@ const ProductDetail = () => {
   // 上の3行で現在のstateからidのみ取り出している
   const [product, setProduct] = useState(null);
   const dispatch = useDispatch()
+  const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
     db.collection('products').doc(id).get()
@@ -75,22 +76,30 @@ const addProduct = useCallback((selectedSize) => {
     quantity: 1,
     size: selectedSize
   }))
+  
 },[product])
 
-const addFavorite = useCallback((selectedSize) => {
+const addFavorite = useCallback((size) => {
   const timestamp = FirebaseTimestamp.now()
-  dispatch(addProductToFavorite({
-    added_at: timestamp,
-    description: product.description,
-    gender: product.gender,
-    images: product.images,
-    name: product.name,
-    price: product.price,
-    productId: product.id,
-    quantity: 1,
-    size: selectedSize
-  }))
+    dispatch(addProductToFavorite({
+      added_at: timestamp,
+      description: product.description,
+      gender: product.gender,
+      images: product.images,
+      name: product.name,
+      price: product.price,
+      productId: product.id,
+      quantity: 1,
+      size: size,
+      fovorited: true
+    }))
+  setIsFavorited((prev)=> !prev)
 },[product])
+
+const toggleLike = useCallback((selectedSize) => {
+  addFavorite(selectedSize)
+  setIsFavorited((prev)=> !prev)
+},[setIsFavorited]);
 
   return(
     <section className="c-section-wrapin">
@@ -103,7 +112,12 @@ const addFavorite = useCallback((selectedSize) => {
             <h2 className="u-text__headline">{product.name}</h2>
             <p className={classes.price}>{product.price.toLocaleString()}</p>
             <div className="module-spacer--small"/>
-            <SizeTable addProduct={ addProduct } addFavorite={ addFavorite } sizes={ product.sizes } />
+            <SizeTable 
+              addProduct={ addProduct } 
+              addFavorite={ addFavorite } 
+              sizes={ product.sizes }
+              isFavorited={isFavorited}
+              />
             <div className="module-spacer--small"/>
             <p>{returnCodeToBr(product.description)}</p>
           </div>
